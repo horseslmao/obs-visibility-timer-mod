@@ -9,6 +9,3 @@ This is a visibility timer script for OBS Studio with the following options:
 5. Duration (ms): time the source will hide or show
 6. Repeat hold time (ms): repeat mode only - time until which the source will hide or show again
 7. Start visible (repeat mode): starts the source shown or hidden in repeat mode
-
-LIMITATIONS-
-OBS Studio doesn't currently have source visibility transitions
