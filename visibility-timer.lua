@@ -1,7 +1,21 @@
+--[[
+	https://github.com/cg2121/obs-visibility-timer
+	
+	Visibility Timer V 2 🐎 Horsey special edition
+	
+	changes:
+		disabled on_event hook bc i dont need it
+		manual scene selection instead of the active scene
+		allows one to toggle elements in nested scenes
+	
+	License  GPL-2.0 license 
+--]]
+
 local repeat_hold, repeat_source
 
 obs           = obslua
 source_name   = ""
+scene_name    = ""
 mode          = ""
 total_ms      = 0
 delay         = 0
@@ -11,9 +25,11 @@ settings_     = nil
 
 function get_item()
 	local source = obs.obs_frontend_get_current_scene()
-	local scene = obs.obs_scene_from_source(source)
+	local scene = obs.obs_get_scene_by_name(scene_name)
+	
 	local item = obs.obs_scene_find_source(scene, source_name)
 	obs.obs_source_release(source)
+	obs.obs_scene_release(scene) 
 	return item
 end
 
@@ -146,6 +162,18 @@ function script_properties()
 	end
 	obs.source_list_release(sources)
 
+	
+	local p = obs.obs_properties_add_list(props, "scene", "Scene", obs.OBS_COMBO_TYPE_LIST, obs.OBS_COMBO_FORMAT_STRING)
+    local scenes = obs.obs_frontend_get_scenes()
+    if scenes then
+        for _, scene in ipairs(scenes) do
+            local scene_name = obs.obs_source_get_name(scene)
+            obs.obs_property_list_add_string(p, scene_name, scene_name)
+            obs.obs_source_release(scene)
+        end
+    end
+	obs.source_list_release(scenes)
+
 	obs.obs_properties_add_int(props, "delay_ms", "Delay after activated (ms)", 0, 3600000, 1)
 	obs.obs_properties_add_int(props, "duration_ms", "Duration (ms)", 1, 3600000, 1)
 	obs.obs_properties_add_int(props, "hold_ms", "Hold time (ms)", 1, 3600000, 1)
@@ -174,9 +202,9 @@ function script_update(settings)
 	delay = obs.obs_data_get_int(settings, "delay_ms")
 	hold = obs.obs_data_get_int(settings, "hold_ms")
 	source_name = obs.obs_data_get_string(settings, "source")
+	scene_name = obs.obs_data_get_string(settings, "scene")
 	mode = obs.obs_data_get_string(settings, "mode")
 	start_visible = obs.obs_data_get_bool(settings, "start_visible")
-
 	activate(true)
 end
 
@@ -184,7 +212,7 @@ function script_defaults(settings)
 	obs.obs_data_set_default_int(settings, "duration_ms", 1000)
 	obs.obs_data_set_default_int(settings, "delay_ms", 0)
 	obs.obs_data_set_default_int(settings, "hold_ms", 1000)
-	obs.obs_data_set_default_bool(setting, "start_visible", true)
+	obs.obs_data_set_default_bool(setting, "start_visible", false)
 end
 
 function script_load(settings)
