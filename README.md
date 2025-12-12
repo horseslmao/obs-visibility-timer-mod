@@ -1,4 +1,4 @@
-# obs-visibility-timer
+# obs-visibility-timer-mod
 
 This is a visibility timer script for OBS Studio with the following options:
 
