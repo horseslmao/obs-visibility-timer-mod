@@ -1,7 +1,5 @@
 --[[
-	https://github.com/cg2121/obs-visibility-timer
-	
-	Visibility Timer V 2 🐎 Horsey special edition
+	Visibility Timer Mod V 1.1 🐎Horsey special edition
 	
 	changes:
 		disabled on_event hook bc i dont need it
@@ -9,6 +7,8 @@
 		allows one to toggle elements in nested scenes
 	
 	License  GPL-2.0 license 
+	forked from https://github.com/cg2121/obs-visibility-timer
+	this repo https://github.com/horseslmao/obs-visibility-timer-mod
 --]]
 
 local repeat_hold, repeat_source
